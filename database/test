@@ -1,0 +1,8 @@
+CREATE TABLE consumers (
+    sno SERIAL,
+    phone_number VARCHAR(20) PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(150) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    dob VARCHAR(10) NOT NULL
+);
