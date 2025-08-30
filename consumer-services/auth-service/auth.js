@@ -4,10 +4,10 @@ const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const pool = require('../../database/connect');
-
+require('dotenv').config();
 
 router.use(cors());
-
+const jwtsecret = process.env.JWTSECRET;
 
 router.get('/', (req, res) => {
     return res.status(200).json({message: 'consumer auth-services'});
@@ -22,6 +22,7 @@ router.post('/signup', async (req, res) => {
         }
         const hashedPassword = await bcrypt.hash(password, 10);
         const newConsumer = await pool.query('INSERT INTO consumers (name, email, phonenumber, dob, password) VALUES ($1, $2, $3, $4, $5) RETURNING *', [name, email, PhoneNumber, dob, hashedPassword]);
+        const token = jwt.sign({ id: newConsumer.rows[0].sno, email: newConsumer.rows[0].email },jwtsecret, { expiresIn: '24h' });
         res.status(201).json({message:"registration successful", user: newConsumer.rows[0]});
     } catch (error) {
         console.error('Error signing up consumer:', error);
@@ -47,7 +48,7 @@ router.post('/login', async (req, res) => {
         
         const token = jwt.sign(
             { id: consumer.rows[0].sno, email: consumer.rows[0].email },
-            'your_jwt_secret',
+            jwtsecret,
             { expiresIn: '24h' }
         );
         
