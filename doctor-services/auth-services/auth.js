@@ -136,4 +136,29 @@ router.post('/login', async (req, res) => {
     }
 });
 
+router.post('/jwt', async (req, res) => {
+    try{
+        const { token } = req.body;
+        if (!token) {
+            return res.status(401).json({message: 'Token missing'});
+        }
+        
+        const decoded = jwt.verify(token, jwtsecret);
+        if (!decoded) {
+            return res.status(401).json({message: 'Invalid token'});
+        }
+        
+        const doctor = await pool.query('SELECT sno, name, email, phonenumber, nmr_number, hospital, specialization, aboutme, booked, bookedby, profile_pic, rating FROM doctors WHERE sno = $1', [decoded.id]);
+        if (doctor.rows.length === 0) {
+            return res.status(401).json({message: 'Doctor not found'});
+        }
+        
+        res.status(200).json({message: 'JWT verified', doctor: doctor.rows[0]});
+    }catch(error){
+        console.error('Doctor jwt error:', error);
+        res.status(500).json({message: 'Internal server error'});
+    }
+});
+    
+
 module.exports = router;  

@@ -13,21 +13,15 @@ router.get('/', (req, res) => {
     return res.status(200).json({message: 'consumer core-services medmeet'});
 });
 
-router.post('/getDoctors', async (req, res) => {
+router.get('/getDoctors', async (req, res) => {
     try{
-        const jwt = req.headers.authorization.split(' ')[1];
-        const decoded = jwt.verify(jwt, jwtsecret);
-        if(!decoded){
-            return res.status(401).json({message: 'Unauthorized'});
-        }
-        const doctors = await pool.query('SELECT * FROM doctors');
+        const doctors = await pool.query('SELECT sno, name, email, phonenumber, nmr_number, hospital, specialization, aboutme, booked, bookedby, rating FROM doctors');
         res.status(200).json({doctors: doctors.rows});
     }catch(error){
         console.error('Error fetching doctors:', error);
         res.status(500).json({message: 'Internal server error'});
     }
 });
-
 router.post('/getDoctorDetails/:id', async (req, res) => {
     try{
         const jwt = req.headers.authorization.split(' ')[1];
@@ -36,7 +30,7 @@ router.post('/getDoctorDetails/:id', async (req, res) => {
             return res.status(401).json({message: 'Unauthorized'});
         }
         const {id} = req.params;
-        const doctor = await pool.query('SELECT * FROM doctors WHERE id = $1', [id]);
+        const doctor = await pool.query('SELECT sno, name, email, phonenumber, nmr_number, hospital, specialization, aboutme, booked, bookedby, profile_pic, rating FROM doctors WHERE id = $1', [id]);
         res.status(200).json({doctor: doctor.rows[0]});
     }catch(error){
         console.error('Error fetching doctor details:', error);
@@ -52,7 +46,7 @@ router.post('/fixAppointment', async (req, res) => {
             return res.status(401).json({message: 'Unauthorized'});
         }
         const {doctorId, date, time} = req.body;
-        const doctor = await pool.query('SELECT * FROM doctors WHERE id = $1', [doctorId]);
+        const doctor = await pool.query('SELECT sno, name, email, phonenumber, nmr_number, hospital, specialization, aboutme, booked, bookedby, profile_pic, rating FROM doctors WHERE id = $1', [doctorId]);
         const booked = doctor.rows[0].booked;
         if(booked === 'none'){
             const updateBooked = await pool.query(

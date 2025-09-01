@@ -5,7 +5,7 @@ const createDoctorsTableQuery = `
 CREATE TABLE IF NOT EXISTS doctors (
     sno SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
-    profile_pic VARCHAR(255),
+    profile_pic BYTEA,
     rating FLOAT DEFAULT 0,
     phonenumber VARCHAR(20) NOT NULL UNIQUE,
     email VARCHAR(150) NOT NULL UNIQUE,
