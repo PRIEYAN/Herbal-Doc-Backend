@@ -116,7 +116,7 @@ router.post('/login', async (req, res) => {
             { expiresIn: '24h' }
         );
 
-        res.status(200).json({
+       return res.status(200).json({
             message: 'Login successful',
             token,
             doctor: {
