@@ -52,4 +52,37 @@ router.post('/getPatientReq', async (req, res) => {
     }
 });
 
+router.post('/acceptPatientReq', async (req, res) => {
+    try{
+        const {appointmentId, token} = req.body;
+        const decoded = jwt.verify(token, jwtsecret);
+        if(!decoded){
+            return res.status(401).json({message: 'Unauthorized'});
+        }
+        const doctor = await pool.query('SELECT * FROM doctors WHERE sno = $1', [decoded.id]);
+        if(!doctor){
+            return res.status(401).json({message: 'Unauthorized'});
+        }
+        const patientReq = await appointment.findOneAndUpdate({appointmentId: appointmentId}, {status: 'accepted', acceptTime: new Date().toISOString()});
+        
+        if (!patientReq) {
+            return res.status(404).json({message: 'Appointment not found'});
+        }
+        
+        const updateBooked = await pool.query('UPDATE doctors SET booked = $1 WHERE sno = $2', ['accepted', doctor.rows[0].sno]);
+        if(!updateBooked){
+            return res.status(400).json({message: 'Failed to update doctor booked status'});
+        }
+        
+        return res.status(200).json({
+            message: 'Patient request accepted successfully',
+            data: patientReq
+        });
+    }
+    catch(error){
+        console.error('Error accepting patient request:', error);
+        res.status(500).json({message: 'Internal server error'});
+    }
+});
+
 module.exports = router;

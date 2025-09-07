@@ -26,7 +26,7 @@ const doctorAuth = require('./doctor-services/auth-services/auth');
 const doctorPfp = require('./doctor-services/auth-services/pfp');
 const doctorPatientReq = require('./doctor-services/core-services/patientReq');
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 5001;
 
 app.use(express.json());
 app.use(cors());
@@ -67,5 +67,6 @@ http://localhost:5001/doctor/auth/jwt
 http://localhost:5001/doctor/pfp/upload
 
 http://localhost:5001/doctor/patientReq/getPatientReq
+http://localhost:5001/doctor/patientReq/acceptPatientReq
 
 */
