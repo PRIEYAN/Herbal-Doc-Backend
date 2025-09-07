@@ -2,6 +2,22 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 require('dotenv').config();
+const mongoose = require('mongoose');
+
+const mongoURL = "mongodb+srv://mnprieyan:p2r7i7e2y00n7@cluster0.ogwyo.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+if (mongoURL) {
+    mongoose.connect(mongoURL, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+    }).then(() => {
+        console.log("Connected to MongoDB Atlas");
+    }).catch((err) => {
+        console.error("MongoDB Atlas connection error:", err);
+    });
+} else {
+    console.error("MONGOURL environment variable is not set");
+}
+
 
 const consumerAuth = require('./consumer-services/auth-service/auth');
 const consumerMedmeet = require('./consumer-services/core-services/medmeet');
@@ -32,6 +48,9 @@ http://localhost:5001/consumer/auth/signup
 http://localhost:5001/consumer/auth/login
 http://localhost:5001/consumer/auth/jwt
 
+http://localhost:5001/consumer/medmeet/getDoctors
+http://localhost:5001/consumer/herbDocAi/generate
+http://localhost:5001/consumer/medmeet/fixAppointment
 http://localhost:5001/consumer/medmeet/getDoctors
 http://localhost:5001/consumer/herbDocAi/generate
 
