@@ -24,6 +24,7 @@ const consumerMedmeet = require('./consumer-services/core-services/medmeet');
 const consumerHerbDocAi = require('./consumer-services/core-services/herbDocAi');
 const doctorAuth = require('./doctor-services/auth-services/auth');
 const doctorPfp = require('./doctor-services/auth-services/pfp');
+const doctorPatientReq = require('./doctor-services/core-services/patientReq');
 
 const port = process.env.PORT || 3000;
 
@@ -35,7 +36,7 @@ app.use('/consumer/medmeet', consumerMedmeet);
 app.use('/consumer/herbDocAi', consumerHerbDocAi);
 app.use('/doctor/auth', doctorAuth);
 app.use('/doctor/pfp', doctorPfp);
-
+app.use('/doctor/patientReq', doctorPatientReq);
 app.listen(port,'0.0.0.0', () => {
   console.log(`Server is running on port ${port}`);
 });
@@ -51,6 +52,7 @@ http://localhost:5001/consumer/auth/jwt
 http://localhost:5001/consumer/medmeet/getDoctors
 http://localhost:5001/consumer/herbDocAi/generate
 http://localhost:5001/consumer/medmeet/fixAppointment
+http://localhost:5001/consumer/medmeet/history
 http://localhost:5001/consumer/medmeet/getDoctors
 http://localhost:5001/consumer/herbDocAi/generate
 
@@ -63,5 +65,7 @@ http://localhost:5001/doctor/auth/signup
 http://localhost:5001/doctor/auth/login
 http://localhost:5001/doctor/auth/jwt
 http://localhost:5001/doctor/pfp/upload
+
+http://localhost:5001/doctor/patientReq/getPatientReq
 
 */
